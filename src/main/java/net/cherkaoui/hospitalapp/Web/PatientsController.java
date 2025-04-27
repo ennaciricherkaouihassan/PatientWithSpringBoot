@@ -1,5 +1,7 @@
 package net.cherkaoui.hospitalapp.Web;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.Model;
 import net.cherkaoui.hospitalapp.Entity.Patient;
 import net.cherkaoui.hospitalapp.Repository.PatientRepository;
@@ -14,15 +16,22 @@ import java.util.List;
 public class PatientsController {
     @Autowired
     private PatientRepository patientRepository;
-    @GetMapping ("/index")
-    public String index(Model model) {
-        List<Patient> patients = patientRepository.findAll();
-        model.addAttribute("patients", patients);
+    @GetMapping("/index")
+    public String index(Model model,
+                        @RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "size", defaultValue = "5") int size,
+                        @RequestParam(name = "keyword", defaultValue = "") String keyword){
+        Page<Patient> pagePatients = patientRepository.findBynameContainsIgnoreCase(keyword,PageRequest.of(page, size));
+        model.addAttribute("patients",pagePatients.getContent());
+        model.addAttribute("pages", new int[pagePatients.getTotalPages()]);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
         return "patients";
     }
     @GetMapping ("/deletepatients")
-    public String deletePatient(@RequestParam(name="id")Long id) {
+    public String deletePatient(@RequestParam(name="id")Long id , String keyword, int page){
         patientRepository.deleteById(id);
-        return "redirect:/index";
+        return "redirect:/index?page="+page+"&keyword="+keyword;
     }
+
 }
