@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="p-3 m-2">
+<div class="card">
+    <div class="card-header">Liste des patients</div>
+    <div class="card-body">
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Prénom</th>
+        <th>Date de naissance</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="patient:${patients}">
+        <td th:text="${patient.id}"></td>
+        <td th:text="${patient.name}"></td>
+        <td th:text="${patient.dateNaissance}"></td>
+        <td th:text="${patient.score}"></td>
+        <td th:text="${patient.malade}"></td>
+        <td>
+            <a onclick="return confirm('etes vous sure ?')" class="btn btn-danger" th:href="@{deletepatients(id=${patient.id})}">delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+</body>
+</html>
